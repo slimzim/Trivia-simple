@@ -80,7 +80,11 @@ function createQuiz() {
         $("#quiz-body").append(newQuestionDiv)
             for (var j=0; j < questionsArray[i].answers.length; j++){
                 var radioBtn = $('<input type="radio" />'); 
-                radioBtn.appendTo("#quiz-body");
+                radioBtn.attr("name", "question" + i)
+                radioBtn.appendTo("#quiz-body");              
+                radioBtnLabel = $("<label>")
+                radioBtnLabel.append(questionsArray[i].answers[j])
+                radioBtnLabel.appendTo("#quiz-body")
                 }
             }
         
