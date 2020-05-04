@@ -1,0 +1,17 @@
+body {
+    background-image: url("../images/polkadots.jpg")
+}
+
+h1 {
+    color: blue;
+}
+
+.main-container {
+    background: bisque;
+    border: 10px solid black;
+}
+
+button {
+    padding: 0px 0px 0px 0px;
+    margin-bottom: 3px;
+}
