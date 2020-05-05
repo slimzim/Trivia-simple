@@ -16,6 +16,8 @@ $(document).on("click", ".gameStart", function(){
 
 var timeLeft = 30;
 var interval;
+var correctCount = 0;
+var incorrectCount = 0;
 
 function run() {
     clearInterval(interval);
@@ -27,7 +29,7 @@ function decrement() {
     $("#time-left").html("<p>Time Remaining: " + timeLeft + " Seconds</p>")
     if (timeLeft < 1) {
         stop();
-        alert("Time Up!");
+        console.log("Time Up!");
     }
   }
 
@@ -40,27 +42,33 @@ function decrement() {
 var questionsArray = [
     {
         question: "What state does Katherine Lundy live in?",
-        answers: ["Florida", "Tennessee", "Alabama", "Kentucky"]
+        answers: ["Florida", "Tennessee", "Alabama", "Kentucky"],
+        correctAnswer: "Florida",
     },
     {
         question: "Phil's dog weighs approximately:",
-        answers: ["5lbs", "20lbs", "75bs", "150lbs"]
+        answers: ["5lbs", "20lbs", "75lbs", "150lbs"],
+        correctAnswer: "75lbs",
     },
     {
         question: "What sporting equipment can be seen hanging on Estiven Salazar's wall?",
         answers: ["Tennis racket", "Boxing gloves", "Gym towel", "Swim goggles"],
+        correctAnswer: "Boxing gloves",
     },
     {
         question: "In the mirror behind Katie Mills, the following is visible:",
         answers: ["A Backstreet Boys poster", "A deer head", "A ceiling fan", "A chandelier"],
+        correctAnswer: "A ceiling fan",
     },
     {
         question: "Mason Shadrick mentioned working at the following restaurant:",
         answers: ["McDonald's", "Sonic", "Applebee's", "Macaroni Grill"],
+        correctAnswer: "Sonic",
     },
     {
         question: "Who in our class mentioned spreading the gospel on a mission trip?",
-        answers: ["Anthony Dowell", "Chip Johnson", "Codie Mitchell", "Jordan Bassett"]
+        answers: ["Anthony Dowell", "Chip Johnson", "Codie Mitchell", "Jordan Bassett"],
+        correctAnswer: "Jordan Bassett",
     }
 ]
 
@@ -74,26 +82,47 @@ function createQuiz() {
 
     for (var i=0; i < questionsArray.length; i++){
         newQuestionDiv = $("<div>")
+        newQuestionDiv.addClass("question-text")
         newQuestionDiv.html(
-            "<p>" + questionsArray[i].question + "<p><br>" +
+            "<p>" + questionsArray[i].question + "<p>" +
             "<div id='radiobuttons'></div>")
         $("#quiz-body").append(newQuestionDiv)
             for (var j=0; j < questionsArray[i].answers.length; j++){
                 var radioBtn = $('<input type="radio" />'); 
                 radioBtn.attr("name", "question" + i)
+                
+                if (questionsArray[i].correctAnswer === questionsArray[i].answers[j]) {
+                    
+                    radioBtn.attr("value", "correct")
+                    
+                }
+                else {
+                    radioBtn.attr("value", "incorrect")
+                   
+                
+                }
+
                 radioBtn.appendTo("#quiz-body");              
                 radioBtnLabel = $("<label>")
                 radioBtnLabel.append(questionsArray[i].answers[j])
                 radioBtnLabel.appendTo("#quiz-body")
                 }
             }
+
+    $("input[type='button']").click(function(){
+        scoreTally = $("input:checked").each(function(){
+            if (this.value === "correct"){
+                correctCount++;
+            }
+            else if (this.value === "incorrect"){
+                incorrectCount++;
+            }
         
-    
+        });
 
-
-
-    $("input:radio").click(function(){
-        console.log("I'm a button")
+        console.log("Correct Answers: " + correctCount)
+        console.log("Incorrect Answers: " + incorrectCount)
+        
     })
-
+   
 }
