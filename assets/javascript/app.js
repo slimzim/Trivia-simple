@@ -22,20 +22,20 @@ var incorrectCount = 0;
 function run() {
     clearInterval(interval);
     interval = setInterval(decrement, 1000);
-  }
+    }
 
 function decrement() {
     timeLeft--;
     $("#time-left").html("<p>Time Remaining: " + timeLeft + " Seconds</p>")
     if (timeLeft < 1) {
+        endGame();
         stop();
-        console.log("Time Up!");
+        }
     }
-  }
 
-  function stop() {
+function stop() {
     clearInterval(interval);
-  }
+    }
 
 // QUESTIONS AND ANSWERS ===========================================================
 
@@ -72,13 +72,11 @@ var questionsArray = [
     }
 ]
 
-// DYNAMICALLY CREATE QUESTIONS AND BUTTONS ===========================================
+// DYNAMICALLY CREATE THE QUIZ ===========================================
 
 function createQuiz() {
-
-
+   
     $("#time-left").html("<p>Time Remaining: " + timeLeft + " Seconds</p>")
-
 
     for (var i=0; i < questionsArray.length; i++){
         newQuestionDiv = $("<div>")
@@ -92,14 +90,10 @@ function createQuiz() {
                 radioBtn.attr("name", "question" + i)
                 
                 if (questionsArray[i].correctAnswer === questionsArray[i].answers[j]) {
-                    
-                    radioBtn.attr("value", "correct")
-                    
+                    radioBtn.attr("value", "correct")    
                 }
                 else {
                     radioBtn.attr("value", "incorrect")
-                   
-                
                 }
 
                 radioBtn.appendTo("#quiz-body");              
@@ -109,20 +103,47 @@ function createQuiz() {
                 }
             }
 
-    $("input[type='button']").click(function(){
-        scoreTally = $("input:checked").each(function(){
-            if (this.value === "correct"){
-                correctCount++;
-            }
-            else if (this.value === "incorrect"){
-                incorrectCount++;
-            }
-        
+    doneButtonDiv = $("<div>")
+    doneButtonDiv.attr("id", "doneButtonDiv")
+    doneButtonDiv.html("<br>")
+    doneButton = $("<button>")
+    doneButton.html('<button type="button" class="btn doneButton">I\'m Done Early!</button>')
+    doneButtonDiv.append(doneButton)
+    doneButtonDiv.appendTo("#quiz-body")     
+}
+
+$(document).on("click", ".doneButton", function(){
+    stop();
+    endGame();
+})
+
+// ENDGAME SCREEN =================================================================
+
+function endGame(){
+    $("input:checked").each(function(){
+        if (this.value === "correct"){
+            correctCount++;  
+        }
+        else if (this.value === "incorrect"){
+            incorrectCount++;
+        }
         });
 
-        console.log("Correct Answers: " + correctCount)
-        console.log("Incorrect Answers: " + incorrectCount)
-        
-    })
-   
+    unansweredCount = questionsArray.length - correctCount - incorrectCount    
+
+    $("#quiz-body").empty()
+    $("#time-left").empty()
+
+    endGameStats = $("<div>")
+    endGameStats.html(
+        '<h2>All Done!</h2><br />' + 
+        '<h2>Correct Answers: <span id="correct-answers"></span></h2><br />' +
+        '<h2>Incorrect Answers: <span id="incorrect-answers"></span></h2><br />' +
+        '<h2>Unanswered: <span id="unanswered"></span></h2><br />'
+    )
+
+    endGameStats.appendTo("#quiz-body")
+    $("#correct-answers").append(correctCount)
+    $("#incorrect-answers").append(incorrectCount)
+    $("#unanswered").append(unansweredCount)
 }
